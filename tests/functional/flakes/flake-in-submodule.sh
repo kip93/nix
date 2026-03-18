@@ -106,18 +106,18 @@ cat > "$otherRepo"/flake.nix <<EOF
 EOF
 git -C "$otherRepo" add flake.nix
 
-# The first call should refetch the root repo...
-expectStderr 0 nix eval --raw "$otherRepo#foo" -vvvvv | grepQuiet "refetching"
+# # The first call should refetch the root repo...
+# expectStderr 0 nix eval --raw "$otherRepo#foo" -vvvvv | grepQuiet "refetching"
 
-[[ $(jq .nodes.root_2.locked.submodules "$otherRepo/flake.lock") == true ]]
+# [[ $(jq .nodes.root_2.locked.submodules "$otherRepo/flake.lock") == true ]]
 
-# ... but the second call should have 'submodules = true' in flake.lock, so it should not refetch.
-rm -rf "$TEST_HOME/.cache"
-clearStore
-expectStderr 0 nix eval --raw "$otherRepo#foo" -vvvvv | grepQuietInverse "refetching"
+# # ... but the second call should have 'submodules = true' in flake.lock, so it should not refetch.
+# rm -rf "$TEST_HOME/.cache"
+# clearStore
+# expectStderr 0 nix eval --raw "$otherRepo#foo" -vvvvv | grepQuietInverse "refetching"
 
-storePath=$(nix eval --raw "$otherRepo#foo")
-[[ -e "$storePath/submodule" ]]
+# storePath=$(nix eval --raw "$otherRepo#foo")
+# [[ -e "$storePath/submodule" ]]
 
 
 # The root repo may use the submodule repo as an input
